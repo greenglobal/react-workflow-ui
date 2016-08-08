@@ -1,0 +1,32 @@
+{
+  "name": "workflow-ui",
+  "productName": "Workflow UI",
+  "description": "Workflow UI for designing docker eco-system",
+  "version": "0.1.0",
+  "author": "BinhQD",
+  "copyright": "© 2016, GreenGlobal",
+  "main": "background.js",
+  "dependencies": {
+    "fs-jetpack": "^0.9.2",
+    "handlebars": "^4.0.5",
+    "jquery": "^1.11.3",
+    "jquery-ui": "^1.10.5",
+    "rivets": "^0.9.1",
+    "vis": "^4.16.1"
+  },
+  "packageNameTemplate": "{{name}}-v{{version}}-{{platform}}-{{arch}}",
+  "osx": {
+    "build": "1",
+    "identifier": "com.example.workflow-ui",
+    "LSApplicationCategoryType": "public.app-category.productivity",
+    "//codeSignIdentitiy": {
+      "dmg": "Developer ID Application: GreenGlobal (APPIDENTITY)",
+      "MAS": "3rd Party Mac Developer Application: GreenGlobal (APPIDENTITY)",
+      "MASInstaller": "3rd Party Mac Developer Installer: GreenGlobal (APPIDENTITY)"
+    }
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "require-dir": "^0.3.0"
+  }
+}
