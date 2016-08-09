@@ -1,6 +1,11 @@
 'use strict';
 import React from 'react';
 
+import Accordion from '../accordions';
+import AccordionHeader from '../accordions/header';
+import AccordionContent from '../accordions/content';
+
+
 let classNames = require('classnames');
 let imgStart = require('../../images/start.png');
 let imgExit = require('../../images/exit.png');
@@ -9,16 +14,16 @@ let imgLoop = require('../../images/loop-white.png');
 let imgSearch = require('../../images/search.svg');
 
 class DevOpsMenu extends React.Component {
+  componentDidMount() {
+    $(this.refs.tabContent.refs.tabContent).show();
+  }
 
   render() {
     return (
-      <div id="tabs-devops">
-        <dl className='accordion'>
-          <dt className='accordion-heading show'>
-            <h4 className='title'>Workflow Controls</h4>
-            <i className='icon-toggle' />
-          </dt>
-          <dd className='accordion-content' style={{paddingTop: 0}}>
+      <div id="tabs-devops" ref='thisTab'>
+        <Accordion>
+          <AccordionHeader title="Workflow Controls"></AccordionHeader>
+          <AccordionContent ref='tabContent'>
             <div id="listWorkflowControls">
               <ul className='list-result'>
                 <li className='list' data-type="flowcontrol-start">
@@ -59,13 +64,10 @@ class DevOpsMenu extends React.Component {
                 </li>
               </ul>
             </div>
-          </dd>
-        </dl>
-        <dl className='accordion'>
-          <dt className='accordion-heading'>
-            <h4 className='title'>Docker Images</h4>
-            <i className='icon-toggle' />
-          </dt>
+          </AccordionContent>
+        </Accordion>
+        <Accordion>
+          <AccordionHeader title="Docker Images"></AccordionHeader>
           <dd className='accordion-content' style={{display: 'none'}}>
             <form className='form-search' action="#" onsubmit="return false;">
               <input className='form-input' type="text" placeholder="Search for docker images..." id="txtSearchDockerImages" />
@@ -78,7 +80,8 @@ class DevOpsMenu extends React.Component {
               </ul>
             </div>
           </dd>
-        </dl>
+        </Accordion>
+
       </div>
     );
   }

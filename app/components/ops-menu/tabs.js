@@ -6,7 +6,6 @@ import ITOpsMenu from './itops';
 import DevOpsMenu from './devops';
 
 require('jquery-ui/tabs');
-require('jquery-ui-css/tabs.css');
 
 class OpsTabs extends React.Component {
   constructor(props, context) {

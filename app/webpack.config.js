@@ -18,7 +18,8 @@ var config = {
       'webpack-hot-middleware/client',
       './index.js',
       'jquery',
-      'jquery-ui-css/core.css',
+      './vendors/css/jquery-ui.css',
+      './css/jquery-ui.theme.min.css',
       './css/style.css'
     ]
   },

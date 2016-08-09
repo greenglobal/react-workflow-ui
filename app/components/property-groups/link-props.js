@@ -6,7 +6,7 @@ let classNames = require('classnames');
 class LinkProps extends React.Component {
   render() {
     return (
-      <form className='form-action item-props' action="#" id="linkProps" onsubmit="return false;">
+      <form className='form-action item-props' action="#" id="linkProps" onsubmit="return false;" style={{display: 'none'}}>
         <div className='wrap-content'>
           <dl className='accordion'>
             <dt className='accordion-heading'>
