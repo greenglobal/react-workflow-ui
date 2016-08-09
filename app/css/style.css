@@ -1,5 +1,3 @@
-/* Reset */
-
 * {
   margin: 0;
   padding: 0;
@@ -16,8 +14,6 @@ input:focus, button:focus {
 body {
   font-family: 'Lato', sans-serif;
 }
-
-/* Layout */
 
 .container-full {
   display: flex;
