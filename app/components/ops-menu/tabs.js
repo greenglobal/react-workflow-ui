@@ -13,11 +13,10 @@ class OpsTabs extends React.Component {
   };
 
   handleSelect() {
-    console.log('test');
+    // console.log('test');
   }
 
   componentDidMount() {
-    console.log($('#tabs-ops'));
     $('#tabs-ops').tabs();
   }
 

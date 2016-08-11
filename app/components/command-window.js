@@ -4,10 +4,21 @@ import React from 'react';
 let classNames = require('classnames');
 
 class CommandWindow extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      
+    };
+  }
+
+  componentDidMount() {
+
+  };
 
   render() {
     return (
-      <div>
+      <div className='bottom-content'>
         <ul className='tabs'>
           <li className='tab-link current' data-tab="tab-1">Host</li>
           <li className='tab-link' data-tab="tab-2">Guest</li>

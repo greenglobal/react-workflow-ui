@@ -1,4 +1,4 @@
-function Container(props) {
+export default function Container(props) {
   var _this = this;
 
   _this.id = props.id;

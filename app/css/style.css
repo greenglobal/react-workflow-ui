@@ -421,10 +421,14 @@ select.form-input {
 .ui-widget.ui-widget-content.dialog-subworkflow {
   background: #fff;
 }
+
 #myCanvas {
   height: calc(100vh - 140px);
-
 }
+.flow-canvas {
+  height: calc(100vh - 240px);
+}
+
 .imageDraggableHelper {
   width: 238px;
   background: #333;

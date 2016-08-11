@@ -8,10 +8,23 @@ import ConditionalProps from './property-groups/conditional-props';
 import LinkProps from './property-groups/link-props';
 import ContainerProps from './property-groups/container-props';
 import CommandWindow from './command-window';
+import WorkflowCanvas from './workflow-editor/WorkflowCanvas';
 
 let classNames = require('classnames');
 
 export class App extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      loopContainers: []
+    };
+  }
+
+  addLoop(container) {
+    this.setState({loopContainers: [...this.state.loopContainers, container]});
+  }
+
   render() {
     return (
       <div className='container-full'>
@@ -20,7 +33,16 @@ export class App extends React.Component {
           <div className='col-left'>
             <OpsTabs/>
           </div>
-          <div className='col-primary demo' id="myCanvas"/>
+          <WorkflowCanvas className='col-primary demo' id="myCanvas" onNewLoop={this.addLoop.bind(this)}/>
+          <div style={{display: 'none'}} ref='container'>
+            {
+              this.state.loopContainers.map((container) =>
+                <div className="dialog-workflow" key={container.id} id={"popup-workflow-loop-" + container.id}>
+                  <WorkflowCanvas className='loop-canvas' options={container} onNewLoop={this.addLoop.bind(this)}/>
+                </div>
+              )
+            }
+          </div>
           <div className='col-right'>
             <ConditionalProps/>
             <LinkProps/>
@@ -30,9 +52,7 @@ export class App extends React.Component {
             </div>
           </div>
         </div>
-        <div className='bottom-content'>
-          <CommandWindow/>
-        </div>
+        <CommandWindow/>
         <div id="popupLoops" style={{display: 'none'}}/>
       </div>
     );
