@@ -9,6 +9,7 @@ var watch = require('gulp-watch');
 var batch = require('gulp-batch');
 var plumber = require('gulp-plumber');
 var jetpack = require('fs-jetpack');
+var run = require('gulp-run');
 
 var bundle = require('./bundle');
 var generateSpecImportsFile = require('./generate_spec_imports');
@@ -20,100 +21,66 @@ var destDir = projectDir.cwd('./build');
 var jsTransformDir = projectDir.cwd('./transform');
 
 var paths = {
-    copyFromAppDir: [
-        './node_modules/**',
-        './helpers/**',
-        './**/*.html',
-        './**/*.+(jpg|png|svg)'
-    ],
+  copyFromAppDir: [
+    './node_modules/**',
+    './helpers/**',
+    './**/*.html',
+    './**/*.+(jpg|png|svg)'
+  ],
 };
 
 // -------------------------------------
 // Tasks
 // -------------------------------------
 
-var copyTask = function () {
-    return projectDir.copyAsync('app', destDir.path(), {
-            overwrite: true,
-            matching: paths.copyFromAppDir
-        });
-};
 gulp.task('copy', ['copy:dist']);
-gulp.task('copy-watch', copyTask);
 
-
-var bundleApplication = function () {
-    return Q.all([
-        bundle(srcDir.path('background.js'), destDir.path('background.js')),
-        bundle(srcDir.path('app.js'), destDir.path('app.js'))
-    ]);
+var bundleApplication = function() {
+  return Q.all([
+    bundle(srcDir.path('background.js'), destDir.path('background.js')),
+    bundle(srcDir.path('app.js'), destDir.path('app.js'))
+  ]);
 };
 
-var bundleSpecs = function () {
-    return generateSpecImportsFile().then(function (specEntryPointPath) {
-        return bundle(specEntryPointPath, destDir.path('spec.js'));
-    });
+var bundleSpecs = function() {
+  return generateSpecImportsFile().then(function(specEntryPointPath) {
+    return bundle(specEntryPointPath, destDir.path('spec.js'));
+  });
 };
 
-var bundleTask = function () {
-    if (utils.getEnvName() === 'test') {
-        return bundleSpecs();
-    }
-    return bundleApplication();
+var bundleTask = function() {
+  if (utils.getEnvName() === 'test') {
+    return bundleSpecs();
+  }
+  return bundleApplication();
 };
 gulp.task('bundle', [], bundleTask);
 gulp.task('bundle-watch', bundleTask);
 
-
-var lessTask = function () {
-    return gulp.src('app/stylesheets/main.less')
-        .pipe(plumber())
-        .pipe(less())
-        .pipe(gulp.dest(destDir.path('stylesheets')));
-};
-gulp.task('less', ['clean'], lessTask);
-gulp.task('less-watch', lessTask);
-
-gulp.task('environment', function () {
-    var configFile = 'config/env_' + utils.getEnvName() + '.json';
-    projectDir.copy(configFile, destDir.path('env.json'));
+gulp.task('environment', function() {
+  var configFile = 'config/env_' + utils.getEnvName() + '.json';
+  projectDir.copy(configFile, destDir.path('env.json'));
 });
 
+gulp.task('package-json', function() {
+  var manifest = srcDir.read('package.json', 'json');
 
-gulp.task('package-json', ['clean'], function () {
-    var manifest = srcDir.read('package.json', 'json');
+  // Add "dev" suffix to name, so Electron will write all data like cookies
+  // and localStorage in separate places for production and development.
+  if (utils.getEnvName() === 'development') {
+    manifest.name += '-dev';
+    manifest.productName += ' Dev';
+  }
 
-    // Add "dev" suffix to name, so Electron will write all data like cookies
-    // and localStorage in separate places for production and development.
-    if (utils.getEnvName() === 'development') {
-        manifest.name += '-dev';
-        manifest.productName += ' Dev';
-    }
-
-    destDir.write('package.json', manifest);
+  destDir.write('package.json', manifest);
 });
-
-
-gulp.task('watch', function () {
-    watch('app/**/*.js', batch(function (events, done) {
-        gulp.start('bundle-watch', done);
-    }));
-    watch(paths.copyFromAppDir, { cwd: 'app' }, batch(function (events, done) {
-        gulp.start('copy-watch', done);
-    }));
-    watch('app/**/*.less', batch(function (events, done) {
-        gulp.start('less-watch', done);
-    }));
-});
-
 
 gulp.task('build', ['clean'], function() {
-  return gulp.start(['bundle', 'less', 'copy', 'environment', 'package-json'], function() {
-
-    return gulp.start(['inject'], function() {
-      return gulp.start(['bundle'], function() {
-
-      });
-    });
+  return gulp.start(['bundle', 'copy', 'environment', 'package-json'], function() {
+    return (
+      run('webpack --config app/webpack.config.js').exec()
+      &&
+      run('NODE_ENV=production npm install --prefix build').exec()
+    )
   });
 });

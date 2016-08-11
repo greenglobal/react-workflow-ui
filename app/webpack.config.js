@@ -85,8 +85,7 @@ var config = {
       template: 'index.html'
     }),
     new CopyWebpackPlugin([
-      { from: 'helpers/**/*', to: paths.dist },
-      { from: 'package.json', to: paths.dist }
+      { from: 'helpers/**/*', to: paths.dist }
     ]),
     new webpack.ProvidePlugin({
         $: "jquery",
