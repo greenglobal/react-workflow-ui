@@ -83,9 +83,7 @@ class WorkflowCanvas extends React.Component {
       width: '100%',
       groups: {
         loop: {
-          color: {
-            background: 'red'
-          },
+          color: { background: 'red' },
           borderWidth: 3
         }
       },
@@ -106,13 +104,7 @@ class WorkflowCanvas extends React.Component {
         scaling: {
           min: 1,
           max: 15,
-          label: {
-            enabled: true,
-            min: 14,
-            max: 30,
-            maxVisible: 30,
-            drawThreshold: 5
-          },
+          label: { enabled: true,min: 14, max: 30, maxVisible: 30, drawThreshold: 5 },
           customScalingFunction: function(min, max, total, value) {
             if (max === min) {
               return 0.5;
@@ -356,39 +348,14 @@ class WorkflowCanvas extends React.Component {
       var canvas = $(this.refs.canvas);
 
       if (selectedNode.type == 'flowcontrol-loop') {
-        // prevent item on parent window
-
-
-        $("#popup-workflow-loop-" + selectedNode.id).dialog({
-          position: {
-            collision: "fit flip",
-            of: '#myCanvas'
-          },
-          draggable: true,
-          resizable: true,
-          width: $('#myCanvas').outerWidth(),
-          height: $('#myCanvas').height(),
-          title: 'Workflow for the loop',
-          dialogClass: "dialog-subworkflow",
-
-          close: function(event, ui) {
-            canvas.droppable( "enable" );
-          },
-          open: function( event, ui ) {
-            canvas.droppable( "disable" );
-          }
-        });
-
-        // loopDataContainer['data-' + selectedNode.id]['network'].moveTo({
-        //   position: {
-        //     x: 0,
-        //     y: 0
-        //   }
-        // });
+        this.props.openWorkflow(this, selectedNode);
       }
     }
   }
 
+  moveTo(options) {
+    this.state.network.moveTo(options);
+  }
 
   getNextId() {
     var id = 0;

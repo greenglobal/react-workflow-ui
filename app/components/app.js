@@ -19,10 +19,53 @@ export class App extends React.Component {
     this.state = {
       loopContainers: []
     };
+    this.stackWorkflows = [];
+  }
+
+  openWorkflow(currentWorkflow, props) {
+    var currentCanvas = $(currentWorkflow.refs.canvas);
+
+    var _app = this;
+
+    var nextWorkflow = this.refs['workflow-ref-' + props.id];
+    $("#popup-workflow-loop-" + props.id).dialog({
+      position: {
+        collision: "fit flip",
+        of: '#myCanvas'
+      },
+      draggable: true,
+      resizable: true,
+      width: $('#myCanvas').outerWidth(),
+      height: $('#myCanvas').height(),
+      title: 'Workflow for the loop',
+      dialogClass: "dialog-subworkflow",
+
+      close: function(event, ui) {
+        currentCanvas.droppable( "enable" );
+
+        _app.stackWorkflows.pop();
+      },
+      open: function( event, ui ) {
+        currentCanvas.droppable( "disable" );
+
+        _app.stackWorkflows.push(nextWorkflow);
+      }
+    });
+
+    nextWorkflow.moveTo({
+      position: {
+        x: 0,
+        y: 0
+      }
+    });
   }
 
   addLoop(container) {
     this.setState({loopContainers: [...this.state.loopContainers, container]});
+  }
+
+  componentDidMount() {
+    this.stackWorkflows.push(this.refs.rootWorkflow);
   }
 
   render() {
@@ -33,12 +76,20 @@ export class App extends React.Component {
           <div className='col-left'>
             <OpsTabs/>
           </div>
-          <WorkflowCanvas className='col-primary demo' id="myCanvas" onNewLoop={this.addLoop.bind(this)}/>
+          <WorkflowCanvas className='col-primary demo' id="myCanvas"
+            onNewLoop={this.addLoop.bind(this)}
+            openWorkflow={this.openWorkflow.bind(this)}
+            ref="rootWorkflow"
+          />
           <div style={{display: 'none'}} ref='container'>
             {
               this.state.loopContainers.map((container) =>
                 <div className="dialog-workflow" key={container.id} id={"popup-workflow-loop-" + container.id}>
-                  <WorkflowCanvas className='loop-canvas' options={container} onNewLoop={this.addLoop.bind(this)}/>
+                  <WorkflowCanvas className='loop-canvas' options={container}
+                    onNewLoop={this.addLoop.bind(this)}
+                    ref={'workflow-ref-' + container.id}
+                    openWorkflow={this.openWorkflow.bind(this)}
+                  />
                 </div>
               )
             }

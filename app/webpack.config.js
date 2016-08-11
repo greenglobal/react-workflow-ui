@@ -3,8 +3,16 @@ const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const TransferWebpackPlugin = require('transfer-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var node_dir = __dirname + '/node_modules';
+
+var paths = {
+  src: './',
+  dist: '../build/',
+  tmp: '../.tmp/',
+};
 
 var config = {
   addVendor: function(name, path) {
@@ -24,9 +32,9 @@ var config = {
     ]
   },
   output: {
-    path: path.join(__dirname, 'build'),
+    path: path.join(__dirname, '/../build'),
     filename: 'bundle.js',
-    publicPath: '/static/'
+    publicPath: './'
   },
   resolve: {
     extensions: ['', '.scss', '.js', '.json', '.md'],
@@ -71,6 +79,15 @@ var config = {
     // new webpack.ProvidePlugin({
     //   'fetch': 'imports?self=>global,this=>global!exports?global.fetch!isomorphic-fetch'
     // }),
+    new HtmlWebpackPlugin({
+      title: 'My App',
+      filename: 'index.html',
+      template: 'index.html'
+    }),
+    new CopyWebpackPlugin([
+      { from: 'helpers/**/*', to: paths.dist },
+      { from: 'package.json', to: paths.dist }
+    ]),
     new webpack.ProvidePlugin({
         $: "jquery",
         jquery: "jQuery",
