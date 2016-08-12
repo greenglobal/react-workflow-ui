@@ -1,11 +1,11 @@
 Workflow UI
 ==============
 Libraries:
-- visjs
-- reactjs
-- electron-boileplate
+- [Visjs](https://github.com/almende/vis "Vis Visualization")
+- [Reactjs](https://github.com/reactjs "ReactJS")
+- [electron-boileplate](https://github.com/szwacz/electron-boilerplate)
 
-=== installation ===
+# Installation 
 
 1. Webpack
 ```sh
