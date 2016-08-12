@@ -4,6 +4,7 @@
   "description": "Workflow UI",
   "scripts": {
     "start": "node server.js",
+    "postinstall": "cd app && npm install",
     "build": "gulp build",
     "release": "gulp release --env=production",
     "pretest": "gulp build --env=test",
